@@ -1,0 +1,115 @@
+@(currentPage: Page[(Coffee,Supplier)], currentOrderBy: Int, currentFilter: String)(implicit flash: play.api.mvc.Flash)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage: Int, newOrderBy: Option[Int] = None) = @{
+    routes.CoffeesController.list(
+    newPage, 
+    newOrderBy.map { orderBy =>
+        if(orderBy == scala.math.abs(currentOrderBy)) -currentOrderBy else orderBy
+    }.getOrElse(currentOrderBy),
+    currentFilter)
+    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(orderBy: Int, title: String) = {
+    <th class="col@orderBy header @if(scala.math.abs(currentOrderBy) == orderBy) @{if(currentOrderBy < 0) "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, Some(orderBy))">@title</a>
+    </th>
+}
+
+@main {
+    
+    <h1>@Messages("coffees.list.title", currentPage.total)</h1>
+
+    @flash.get("success").map { message =>
+        <div class="alert-message warning">
+            <strong>Done!</strong> @message
+        </div>
+    }
+
+    <div id="actions">
+        
+        @helper.form(action=routes.CoffeesController.list()) {
+            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by name...">
+            <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
+        }
+        
+        <a class="btn success" id="add" href="@routes.CoffeesController.create()">Add a new coffee</a>
+        
+    </div>
+    
+    @Option(currentPage.items).filterNot(_.isEmpty).map { entities =>
+        
+        <table class="computers zebra-striped">
+            <thead>
+                <tr>
+                    @header(2, "Coffee name")
+                    @header(3, "Supplier")
+                    @header(4, "Price")
+                    @header(5, "Sales")
+                    @header(6, "Total")
+                </tr>
+            </thead>
+            <tbody>
+                @entities.map { 
+                 case (entity,supplier) => {
+                        <tr>
+                            <td><a href="@routes.CoffeesController.edit(entity.id.get)">@entity.name</a></td>
+                            <td>
+                                @supplier.name
+                            </td>
+                            <td>
+                                @entity.price
+                            </td>
+                            <td>
+                                @entity.sales
+                            </td>
+                            <td>
+                                @entity.total
+                            </td>          
+                        </tr>
+                     }
+                }
+
+            </tbody>
+        </table>
+
+        <div id="pagination" class="pagination">
+            <ul>
+                @currentPage.prev.map { page =>
+                    <li class="prev">
+                        <a href="@link(page)">&larr; Previous</a>
+                    </li> 
+                }.getOrElse {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                }
+                <li class="current">
+                    <a>Displaying @(currentPage.offset + 1) to @(currentPage.offset + entities.size) of @currentPage.total</a>
+                </li>
+                @currentPage.next.map { page =>
+                    <li class="next">
+                        <a href="@link(page)">Next &rarr;</a>
+                    </li> 
+                }.getOrElse {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        
+    }.getOrElse {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    }   
+}

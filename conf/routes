@@ -1,0 +1,23 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET      /                           controllers.CoffeesController.index
+
+# Coffees list (look at the default values for pagination parameters)
+GET      /coffees                    controllers.CoffeesController.list(p:Int ?= 0, s:Int ?= 2, f ?= "%")
+
+# Add coffee
+GET      /coffees/new                controllers.CoffeesController.create
+POST     /coffees                    controllers.CoffeesController.save
+
+# Edit existing coffee
+GET     /coffees/:id                controllers.CoffeesController.edit(id:Int)
+POST    /coffees/:id                controllers.CoffeesController.update(id:Int)
+
+# Delete a computer
+POST    /coffees/:id/delete         controllers.CoffeesController.delete(id:Int)
+
+# Map static resources from the /public folder to the /assets URL path
+GET      /assets/*file               controllers.Assets.at(path="/public", file)

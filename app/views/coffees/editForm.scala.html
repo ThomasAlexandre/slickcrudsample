@@ -1,0 +1,40 @@
+@(id: Int, coffeeForm: Form[Coffee], suppliers : Seq[(String, String)])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
+@main {
+    
+    <h1>Edit coffee</h1>
+    
+    @form(routes.CoffeesController.update(id)) {
+    
+        <fieldset>
+        
+            @inputText(coffeeForm("name"),  '_label -> "Coffee name")
+            @inputText(coffeeForm("price"), '_label -> "Price")
+            @inputText(coffeeForm("sales"), '_label -> "Sales")
+            @inputText(coffeeForm("total"), '_label -> "Total")
+
+            @select(
+                coffeeForm("supID"), 
+                suppliers, 
+                '_label -> "Supplier", '_default -> "-- Choose a supplier --",
+                '_showConstraints -> false
+            )
+            
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Save this coffee" class="btn primary"> or 
+            <a href="@routes.CoffeesController.list()" class="btn">Cancel</a> 
+        </div>
+        
+    }
+    
+    @form(routes.CoffeesController.delete(id), 'class -> "topRight") {
+        <input type="submit" value="Delete this coffee" class="btn danger">
+    }
+    
+}
