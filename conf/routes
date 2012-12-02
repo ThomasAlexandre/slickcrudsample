@@ -13,11 +13,11 @@ GET      /coffees/new                controllers.CoffeesController.create
 POST     /coffees                    controllers.CoffeesController.save
 
 # Edit existing coffee
-GET     /coffees/:id                controllers.CoffeesController.edit(id:Int)
-POST    /coffees/:id                controllers.CoffeesController.update(id:Int)
+GET     /coffees/:id                controllers.CoffeesController.edit(id:String)
+POST    /coffees/:id                controllers.CoffeesController.update(id:String)
 
 # Delete a computer
-POST    /coffees/:id/delete         controllers.CoffeesController.delete(id:Int)
+POST    /coffees/:id/delete         controllers.CoffeesController.delete(id:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET      /assets/*file               controllers.Assets.at(path="/public", file)

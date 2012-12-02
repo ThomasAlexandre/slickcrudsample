@@ -31,11 +31,11 @@ object Global extends GlobalSettings {
 
       // Insert some coffees (using JDBC's batch insert feature, if supported by the DB)
       Coffees.insertAll(
-        Coffee(Some(1),"Colombian", 101, 799, 0, 0),
-        Coffee(Some(2),"French_Roast", 49, 899, 0, 0),
-        Coffee(Some(3),"Espresso", 150, 999, 0, 0),
-        Coffee(Some(4),"Colombian_Decaf", 101, 899, 0, 0),
-        Coffee(Some(5),"French_Roast_Decaf", 49, 999, 0, 0))
+        Coffee(Some("Colombian"), 101, 799, 0, 0),
+        Coffee(Some("French_Roast"), 49, 899, 0, 0),
+        Coffee(Some("Espresso"), 150, 999, 0, 0),
+        Coffee(Some("Colombian_Decaf"), 101, 899, 0, 0),
+        Coffee(Some("French_Roast_Decaf"), 49, 999, 0, 0))
     }
   }
 }

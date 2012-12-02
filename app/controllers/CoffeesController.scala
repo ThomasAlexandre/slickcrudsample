@@ -37,8 +37,8 @@ object CoffeesController extends Controller {
    */
   val form = Form(
     mapping(
-      "id" -> optional(number),
-      "name" -> nonEmptyText,
+      //"id" -> optional(number),
+      "name" -> optional(nonEmptyText),
       "supID" -> number,
       "price" -> longNumber,
       "sales" -> number,
@@ -87,7 +87,7 @@ object CoffeesController extends Controller {
       formWithErrors => BadRequest(html.coffees.createForm(formWithErrors, supplierSelect)),
       entity => {
         database withTransaction {
-          Coffees.autoInc.insert(entity)
+          Coffees.insert(entity)
           Home.flashing("success" -> s"Entity ${entity.name} has been created")
         }
       })
@@ -98,10 +98,10 @@ object CoffeesController extends Controller {
    *
    * @param id Id of the entity to edit
    */
-  def edit(id: Int) = Action {
+  def edit(pk: String) = Action {
     database withSession {
-      Coffees.findById(id).list.headOption match {
-        case Some(e) => Ok(html.coffees.editForm(id, form.fill(e), supplierSelect))
+      Coffees.findByPK(pk).list.headOption match {
+        case Some(e) => Ok(html.coffees.editForm(pk, form.fill(e), supplierSelect))
         case None => NotFound
       }
     }
@@ -112,12 +112,12 @@ object CoffeesController extends Controller {
    *
    * @param id Id of the entity to edit
    */
-  def update(id: Int) = Action { implicit request =>
+  def update(pk: String) = Action { implicit request =>
     database withSession {
       form.bindFromRequest.fold(
-        formWithErrors => BadRequest(html.coffees.editForm(id, formWithErrors, supplierSelect)),
+        formWithErrors => BadRequest(html.coffees.editForm(pk, formWithErrors, supplierSelect)),
         entity => {
-          Home.flashing(Coffees.findById(id).update(entity) match {
+          Home.flashing(Coffees.findByPK(pk).update(entity) match {
             case 0 => "failure" -> s"Could not update entity ${entity.name}"
             case _ => "success" -> s"Entity ${entity.name} has been updated"
           })
@@ -128,9 +128,9 @@ object CoffeesController extends Controller {
   /**
    * Handle entity deletion.
    */
-  def delete(id: Int) = Action {
+  def delete(pk: String) = Action {
     database withSession {
-      Home.flashing(Coffees.findById(id).delete match {
+      Home.flashing(Coffees.findByPK(pk).delete match {
         case 0 => "failure" -> "Entity has Not been deleted"
         case x => "success" -> s"Entity has been deleted (deleted $x row(s))"
       })

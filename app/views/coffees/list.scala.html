@@ -59,7 +59,7 @@
                 @entities.map { 
                  case (entity,supplier) => {
                         <tr>
-                            <td><a href="@routes.CoffeesController.edit(entity.id.get)">@entity.name</a></td>
+                            <td><a href="@routes.CoffeesController.edit(entity.name.get)">@entity.name</a></td>
                             <td>
                                 @supplier.name
                             </td>

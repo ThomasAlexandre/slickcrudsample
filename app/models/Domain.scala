@@ -8,7 +8,7 @@ import scala.reflect.runtime.universe._
 //import scala.slick.ast.Join
 
 case class Supplier(
-  id: Option[Int],
+  supId: Option[Int],
   name: String,
   street: String,
   city: String,
@@ -16,8 +16,9 @@ case class Supplier(
   zipCode: String)
 
 case class Coffee(
-  id: Option[Int],
-  name: String,
+  //id: Option[Int],
+  //name: String,
+  name: Option[String],
   supID: Int,
   price: Long,
   sales: Int,
@@ -33,35 +34,36 @@ case class Page[A](items: Seq[A], page: Int = 0, offset: Long, total: Long) {
 
 // Definition of the SUPPLIERS table
 object Suppliers extends Table[Supplier]("SUPPLIERS") {
-  def id = column[Int]("SUP_ID", O.PrimaryKey) // This is the primary key column
+  def supId = column[Int]("SUP_ID", O.PrimaryKey) // This is the primary key column
   def name = column[String]("SUP_NAME")
   def street = column[String]("STREET")
   def city = column[String]("CITY")
   def state = column[String]("STATE")
   def zipCode = column[String]("ZIP")
   // Every table needs a * projection with the same type as the table's type parameter
-  def * = id.? ~ name ~ street ~ city ~ state ~ zipCode <> (Supplier.apply _, Supplier.unapply _)
+  def * = supId.? ~ name ~ street ~ city ~ state ~ zipCode <> (Supplier.apply _, Supplier.unapply _)
 
   def findAll() = for (s <- Suppliers) yield s
 
   /**
    * Construct the Map[String,String] needed to fill a select options set.
    */
-  def options = this.findAll.map(x => x.id -> x.name)
+  def options = this.findAll.map(x => x.supId -> x.name)
 }
 
 // Definition of the COFFEES table
 object Coffees extends Table[Coffee]("COFFEES") {
-  def id = column[Int]("COF_ID", O.PrimaryKey, O AutoInc) // This is the primary key column
-  def name = column[String]("COF_NAME")
+  //def id = column[Int]("COF_ID", O.PrimaryKey, O AutoInc) // This is the primary key column
+  def name = column[String]("COF_NAME", O.PrimaryKey) // This is the primary key column
   def supID = column[Int]("SUP_ID")
   def price = column[Long]("PRICE")
   def sales = column[Int]("SALES")
   def total = column[Int]("TOTAL")
-  def * = id.? ~ name ~ supID ~ price ~ sales ~ total <> (Coffee.apply _, Coffee.unapply _)
-  def autoInc = id.? ~ name ~ supID ~ price ~ sales ~ total <> (Coffee, Coffee.unapply _) returning id
+  //def * = id.? ~ name ~ supID ~ price ~ sales ~ total <> (Coffee.apply _, Coffee.unapply _)
+  def * = name.? ~ supID ~ price ~ sales ~ total <> (Coffee.apply _, Coffee.unapply _)
+  //def autoInc = id.? ~ name ~ supID ~ price ~ sales ~ total <> (Coffee, Coffee.unapply _) returning id
   // A reified foreign key relation that can be navigated to create a join
-  def supplier = foreignKey("SUP_FK", supID, Suppliers)(_.id)
+  def supplier = foreignKey("SUP_FK", supID, Suppliers)(_.supId)
 
   def findAll(filter: String = "%") = {
     for {
@@ -78,8 +80,8 @@ object Coffees extends Table[Coffee]("COFFEES") {
     findAll(filter).sortBy(_._1.name).drop(page * pageSize).take(pageSize)
   }
 
-  def findById(id: Int) =
-    for (c <- Coffees if c.id === id) yield c
+  def findByPK(pk: String) =
+    for (c <- Coffees if c.name === pk) yield c
 }
 
 

@@ -1,4 +1,4 @@
-@(id: Int, coffeeForm: Form[Coffee], suppliers : Seq[(String, String)])
+@(pk: String, coffeeForm: Form[Coffee], suppliers : Seq[(String, String)])
 
 @import helper._
 
@@ -8,7 +8,7 @@
     
     <h1>Edit coffee</h1>
     
-    @form(routes.CoffeesController.update(id)) {
+    @form(routes.CoffeesController.update(pk)) {
     
         <fieldset>
         
@@ -33,7 +33,7 @@
         
     }
     
-    @form(routes.CoffeesController.delete(id), 'class -> "topRight") {
+    @form(routes.CoffeesController.delete(pk), 'class -> "topRight") {
         <input type="submit" value="Delete this coffee" class="btn danger">
     }
     
