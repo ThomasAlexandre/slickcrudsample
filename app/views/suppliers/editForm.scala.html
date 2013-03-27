@@ -1,0 +1,40 @@
+@(pk: String, supplierForm: Form[Supplier], suppliers : Seq[(String, String)])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
+@main {
+    
+    <h1>Edit supplier</h1>
+    
+    @form(routes.SuppliersController.update(pk)) {
+    
+        <fieldset>
+        
+            @inputText(supplierForm("name"),  '_label -> "Supplier name")
+            @inputText(supplierForm("price"), '_label -> "Price")
+            @inputText(supplierForm("sales"), '_label -> "Sales")
+            @inputText(supplierForm("total"), '_label -> "Total")
+
+            @select(
+                supplierForm("supID"), 
+                suppliers, 
+                '_label -> "Supplier", '_default -> "-- Choose a supplier --",
+                '_showConstraints -> false
+            )
+            
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Save this supplier" class="btn primary"> or 
+            <a href="@routes.SuppliersController.list()" class="btn">Cancel</a> 
+        </div>
+        
+    }
+    
+    @form(routes.SuppliersController.delete(pk), 'class -> "topRight") {
+        <input type="submit" value="Delete this supplier" class="btn danger">
+    }
+    
+}
