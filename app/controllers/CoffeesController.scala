@@ -37,9 +37,9 @@ object CoffeesController extends Controller {
    */
   val form = Form(
     mapping(
-      //"id" -> optional(number),
-      "name" -> optional(nonEmptyText),
-      "supID" -> number,
+      "id" -> optional(longNumber),
+      "name" -> nonEmptyText,
+      "supID" -> longNumber,
       "price" -> longNumber,
       "sales" -> number,
       "total" -> number)(Coffee.apply)(Coffee.unapply))
@@ -71,6 +71,20 @@ object CoffeesController extends Controller {
   }
   
   /**
+   * Display an existing entity.
+   *
+   * @param id Id of the entity to show
+   */
+  def show(pk: Long) = Action {
+    database withSession {
+      Coffees.findByPK(pk).list.headOption match {
+        case Some(e) => Ok(html.coffees.show(e,Suppliers.findByPK(e.supID).first))
+        case None => NotFound
+      }
+    }
+  }
+  
+  /**
    * Display the 'new form'.
    */
   def create = Action {
@@ -98,7 +112,7 @@ object CoffeesController extends Controller {
    *
    * @param id Id of the entity to edit
    */
-  def edit(pk: String) = Action {
+  def edit(pk: Long) = Action {
     database withSession {
       Coffees.findByPK(pk).list.headOption match {
         case Some(e) => Ok(html.coffees.editForm(pk, form.fill(e), supplierSelect))
@@ -112,7 +126,7 @@ object CoffeesController extends Controller {
    *
    * @param id Id of the entity to edit
    */
-  def update(pk: String) = Action { implicit request =>
+  def update(pk: Long) = Action { implicit request =>
     database withSession {
       form.bindFromRequest.fold(
         formWithErrors => BadRequest(html.coffees.editForm(pk, formWithErrors, supplierSelect)),
@@ -128,7 +142,7 @@ object CoffeesController extends Controller {
   /**
    * Handle entity deletion.
    */
-  def delete(pk: String) = Action {
+  def delete(pk: Long) = Action {
     database withSession {
       Home.flashing(Coffees.findByPK(pk).delete match {
         case 0 => "failure" -> "Entity has Not been deleted"

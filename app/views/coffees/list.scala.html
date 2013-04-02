@@ -48,7 +48,8 @@
         <table class="computers zebra-striped">
             <thead>
                 <tr>
-                    @header(2, "Coffee name")
+                    @header(1, "Coffee id")
+                    @header(2, "Name")
                     @header(3, "Supplier")
                     @header(4, "Price")
                     @header(5, "Sales")
@@ -59,9 +60,12 @@
                 @entities.map { 
                  case (entity,supplier) => {
                         <tr>
-                            <td><a href="@routes.CoffeesController.edit(entity.name.get)">@entity.name</a></td>
+                            <td><a href="@routes.CoffeesController.show(entity.id.get)">@entity.id</a></td>
                             <td>
-                                @supplier.name
+                                @entity.name
+                            </td>
+                            <td>
+                                <a href="@routes.SuppliersController.show(supplier.id.get)">@supplier.name</a>
                             </td>
                             <td>
                                 @entity.price

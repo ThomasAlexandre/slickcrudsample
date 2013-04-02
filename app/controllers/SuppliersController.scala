@@ -37,8 +37,7 @@ object SuppliersController extends Controller {
    */
   val form = Form(
     mapping(
-      //"id" -> optional(number)
-      "supId" -> optional(number),
+      "id" -> optional(longNumber),
       "name" -> nonEmptyText,
       "street" -> text,
       "city" -> text,
@@ -59,7 +58,7 @@ object SuppliersController extends Controller {
    * @param orderBy Column to be sorted
    * @param filter Filter applied on entity names
    */
-  def list(page: Int, orderBy: Int, filter: String = "%") = Action { implicit request =>
+  def list(page: Int, orderBy: Int, order:String, asc:Boolean=false,filter: String = "%") = Action { implicit request =>
     database withSession {
       Ok(html.suppliers.list(
         Page(Suppliers.list(page, pageSize, orderBy, filter).list,
@@ -70,13 +69,27 @@ object SuppliersController extends Controller {
         filter))
     }
   }
+  
+  /**
+   * Display an existing entity.
+   *
+   * @param id Id of the entity to show
+   */
+  def show(pk: Long) = Action {
+    database withSession {
+      Suppliers.findByPK(pk).list.headOption match {
+        case Some(e) => Ok(html.suppliers.show(e))
+        case None => NotFound
+      }
+    }
+  }
 
   /**
    * Display the 'new form'.
    */
   def create = Action {
     database withSession {
-      Ok(html.suppliers.createForm(form, supplierSelect))
+      Ok(html.suppliers.createForm(form))
     }
   }
 
@@ -85,7 +98,7 @@ object SuppliersController extends Controller {
    */
   def save = Action { implicit request =>
     form.bindFromRequest.fold(
-      formWithErrors => BadRequest(html.suppliers.createForm(formWithErrors, supplierSelect)),
+      formWithErrors => BadRequest(html.suppliers.createForm(formWithErrors)),
       entity => {
         database withTransaction {
           Suppliers.insert(entity)
@@ -99,7 +112,7 @@ object SuppliersController extends Controller {
    *
    * @param id Id of the entity to edit
    */
-  def edit(pk: String) = Action {
+  def edit(pk: Long) = Action {
     database withSession {
       Suppliers.findByPK(pk).list.headOption match {
         case Some(e) => Ok(html.suppliers.editForm(pk, form.fill(e), supplierSelect))
@@ -113,7 +126,7 @@ object SuppliersController extends Controller {
    *
    * @param id Id of the entity to edit
    */
-  def update(pk: String) = Action { implicit request =>
+  def update(pk: Long) = Action { implicit request =>
     database withSession {
       form.bindFromRequest.fold(
         formWithErrors => BadRequest(html.suppliers.editForm(pk, formWithErrors, supplierSelect)),
@@ -129,7 +142,7 @@ object SuppliersController extends Controller {
   /**
    * Handle entity deletion.
    */
-  def delete(pk: String) = Action {
+  def delete(pk: Long) = Action {
     database withSession {
       Home.flashing(Suppliers.findByPK(pk).delete match {
         case 0 => "failure" -> "Entity has Not been deleted"

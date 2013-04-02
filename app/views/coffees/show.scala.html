@@ -1,0 +1,48 @@
+@(entity: Coffee, supplier : Supplier)
+
+@import helper._ 
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) } 
+
+@main {
+
+  <h1>Show coffee</h1>
+
+  <table>
+	<tbody>
+		<tr>
+			<td>Coffee id</td>
+			<td>@entity.id</td>
+		</tr>
+		<tr>
+			<td>Coffee name</td>
+			<td>@entity.name</td>
+		</tr>
+		<tr>
+			<td>Supplier</td>
+			<td>@supplier.name</td>
+		</tr>
+		<tr>
+			<td>Price</td>
+			<td>@entity.price</td>
+		</tr>
+		<tr>
+			<td>Sales</td>
+			<td>@entity.sales</td>
+		</tr>
+		<tr>
+			<td>Total</td>
+			<td>@entity.total</td>
+		</tr>
+	</tbody>
+  </table>
+
+  <div class="actions">
+	<a href="@routes.CoffeesController.edit(entity.id.get)" class="btn">Edit</a>
+	or <a href="@routes.CoffeesController.list()" class="btn">Cancel</a>
+  </div>
+
+  @form(routes.CoffeesController.delete(entity.id.get), 'class -> "topRight") {
+    <input type="submit" value="Delete this coffee" class="btn danger">
+  } 
+
+}

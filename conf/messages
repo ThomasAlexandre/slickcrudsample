@@ -1,3 +1,4 @@
 # Messages
 
 coffees.list.title={0,choice,0#No coffees|1#One coffee|1<{0,number,integer} coffees} found
+suppliers.list.title={0,choice,0#No suppliers|1#One supplier|1<{0,number,integer} suppliers} found

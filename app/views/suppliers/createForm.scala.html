@@ -1,4 +1,4 @@
-@(supplierForm: Form[Supplier], suppliers: Seq[(String, String)])
+@(supplierForm: Form[Supplier])
 
 @import helper._
 
@@ -11,20 +11,11 @@
     @form(routes.SuppliersController.save()) {
         
         <fieldset>
-        
-            @inputText(supplierForm("name"), '_label -> "Supplier name")
-            @inputText(supplierForm("price"), '_label -> "Price")
-            @inputText(supplierForm("sales"), '_label -> "Sales")
-            @inputText(supplierForm("total"), '_label -> "Total")
-
-            @select(
-                supplierForm("supID"), 
-                suppliers, 
-                '_label -> "Supplier", '_default -> "-- Choose a supplier --",
-                '_showConstraints -> false
-            )
-            
-
+            @inputText(supplierForm("name"), '_label -> "Name")
+            @inputText(supplierForm("street"), '_label -> "Street")
+            @inputText(supplierForm("city"), '_label -> "City")
+            @inputText(supplierForm("state"), '_label -> "State")
+            @inputText(supplierForm("zipCode"), '_label -> "Zip Code")           
         </fieldset>
         
         <div class="actions">

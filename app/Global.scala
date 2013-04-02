@@ -25,17 +25,17 @@ object Global extends GlobalSettings {
 
       // Insert some suppliers
       Suppliers.insertAll(
-        Supplier(Some(101), "Acme, Inc.", "99 Market Street", "Mendocino", "CA", "95199"),
-        Supplier(Some(49), "Superior Coffee", "1 Party Place", "Groundsville", "CA", "95460"),
-        Supplier(Some(150), "The High Ground", "100 Coffee Lane", "Meadows", "CA", "93966"))
+        Supplier(Some(1), "Acme, Inc.", "99 Market Street", "Mendocino", "CA", "95199"),
+        Supplier(Some(2), "Superior Coffee", "1 Party Place", "Groundsville", "CA", "95460"),
+        Supplier(Some(3), "The High Ground", "100 Coffee Lane", "Meadows", "CA", "93966"))
 
       // Insert some coffees (using JDBC's batch insert feature, if supported by the DB)
       Coffees.insertAll(
-        Coffee(Some("Colombian"), 150, 799, 0, 0),
-        Coffee(Some("French_Roast"), 49, 899, 0, 0),
-        Coffee(Some("Espresso"), 150, 999, 0, 0),
-        Coffee(Some("Colombian_Decaf"), 101, 899, 0, 0),
-        Coffee(Some("French_Roast_Decaf"), 49, 999, 0, 0))
+        Coffee(Some(1),"Colombian", 2, 799, 0, 0),
+        Coffee(Some(2),"French_Roast", 3, 899, 0, 0),
+        Coffee(Some(3),"Espresso", 1, 999, 0, 0),
+        Coffee(Some(4),"Colombian_Decaf", 1, 899, 0, 0),
+        Coffee(Some(5),"French_Roast_Decaf", 3, 999, 0, 0))
     }
   }
 }

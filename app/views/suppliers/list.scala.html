@@ -24,7 +24,7 @@
 
 @main {
     
-    <h1>@Messages("coffees.list.title", currentPage.total)</h1>
+    <h1>@Messages("suppliers.list.title", currentPage.total)</h1>
 
     @flash.get("success").map { message =>
         <div class="alert-message warning">
@@ -39,7 +39,7 @@
             <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
         }
         
-        <a class="btn success" id="add" href="@routes.SuppliersController.create()">Add a new coffee</a>
+        <a class="btn success" id="add" href="@routes.SuppliersController.create()">Add a new supplier</a>
         
     </div>
     
@@ -48,6 +48,7 @@
         <table class="computers zebra-striped">
             <thead>
                 <tr>
+                    @header(1, "Supplier id")
                     @header(2, "Supplier name")
                     @header(3, "Street")
                     @header(4, "City")
@@ -59,7 +60,12 @@
                 @entities.map { 
                  case (entity) => {
                         <tr>
-                            <td><a href="@routes.SuppliersController.edit(entity.name)">@entity.name</a></td>
+                            <td>
+                            <a href="@routes.SuppliersController.show(entity.id.get)">@entity.id</a> 
+                            </td>                     
+                            <td>
+                                @entity.name
+                            </td>
                             <td>
                                 @entity.street
                             </td>

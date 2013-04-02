@@ -3,38 +3,44 @@
 # ~~~~
 
 # Home page
-GET      /                           controllers.CoffeesController.index
+GET      /							controllers.CoffeesController.index
 
 
 # Coffees list (look at the default values for pagination parameters)
-GET      /coffees                    controllers.CoffeesController.list(p:Int ?= 0, s:Int ?= 2, f ?= "%")
+GET      /coffees					controllers.CoffeesController.list(p:Int ?= 0, s:Int ?= 2, f ?= "%")
 
 # Add coffee
-GET      /coffees/new                controllers.CoffeesController.create
-POST     /coffees                    controllers.CoffeesController.save
+GET      /coffees/new				controllers.CoffeesController.create
+POST     /coffees					controllers.CoffeesController.save
+
+# Show a coffee
+GET		 /coffees/:id				controllers.CoffeesController.show(id:Long)
 
 # Edit existing coffee
-GET     /coffees/:id                controllers.CoffeesController.edit(id:String)
-POST    /coffees/:id                controllers.CoffeesController.update(id:String)
+GET     /coffees/edit/:id			controllers.CoffeesController.edit(id:Long)
+POST    /coffees/edit/:id			controllers.CoffeesController.update(id:Long)
 
 # Delete a coffee
-POST    /coffees/:id/delete         controllers.CoffeesController.delete(id:String)
+POST    /coffees/:id/delete         controllers.CoffeesController.delete(id:Long)
 
 
 
 # Suppliers list (look at the default values for pagination parameters)
-GET      /suppliers                    controllers.SuppliersController.list(p:Int ?= 0, s:Int ?= 2, f ?= "%")
+GET      /suppliers             	controllers.SuppliersController.list(p:Int ?= 0, s:Int ?= 2,o:String ?="name", a:Boolean ?=false, f ?= "%")
 
 # Add supplier
-GET      /suppliers/new                controllers.SuppliersController.create
-POST     /suppliers                    controllers.SuppliersController.save
+GET      /suppliers/new				controllers.SuppliersController.create
+POST     /suppliers					controllers.SuppliersController.save
+
+# Show a supplier
+GET		 /suppliers/:id				controllers.SuppliersController.show(id:Long)
 
 # Edit existing supplier
-GET     /suppliers/:id                controllers.SuppliersController.edit(id:String)
-POST    /suppliers/:id                controllers.SuppliersController.update(id:String)
+GET     /suppliers/edit/:id			controllers.SuppliersController.edit(id:Long)
+POST    /suppliers/edit/:id			controllers.SuppliersController.update(id:Long)
 
 # Delete a supplier
-POST    /suppliers/:id/delete         controllers.SuppliersController.delete(id:String)
+POST    /suppliers/:id/delete		controllers.SuppliersController.delete(id:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET      /assets/*file               controllers.Assets.at(path="/public", file)
