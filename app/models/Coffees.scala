@@ -2,6 +2,7 @@ package models
 
 import scala.slick.driver.H2Driver.simple._
 import scala.reflect.runtime.{ universe => ru }
+import util.DynamicFinder
 
 case class Coffee(
   id:Option[Long],
@@ -12,7 +13,7 @@ case class Coffee(
   total: Int)
 
 // Definition of the COFFEES table
-object Coffees extends Table[Coffee]("COFFEES") {
+object Coffees extends Table[Coffee]("COFFEES") with DynamicFinder {
   def id = column[Long]("COF_ID", O.PrimaryKey, O AutoInc) // This is the primary key column
   def name = column[String]("COF_NAME")
   def supID = column[Long]("SUP_ID")
@@ -62,9 +63,9 @@ object Coffees extends Table[Coffee]("COFFEES") {
     }.drop(page * pageSize).take(pageSize)
   }
 
-
   def findByPK(pk: Long) =
     for (c <- Coffees if c.id === pk) yield c
+    
 }
 
 

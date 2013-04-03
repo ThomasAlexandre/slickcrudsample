@@ -50,6 +50,11 @@ object CoffeesController extends Controller {
    * Handle default path requests, redirect to entities list
    */
   def index = Action { Home }
+  
+  def trydynamic = Action {
+    Coffees.findByNameAndPrice("espresso",999)
+    Home
+  }
 
   /**
    * Display the paginated list.
