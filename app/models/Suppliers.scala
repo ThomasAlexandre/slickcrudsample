@@ -2,6 +2,7 @@ package models
 
 import scala.slick.driver.H2Driver.simple._
 import scala.reflect.runtime.{ universe => ru }
+import util.DynamicFinder
 
 case class Supplier(
   id: Option[Long],
@@ -12,7 +13,7 @@ case class Supplier(
   zipCode: String)
 
 // Definition of the SUPPLIERS table
-object Suppliers extends Table[Supplier]("SUPPLIERS") {
+object Suppliers extends Table[Supplier]("SUPPLIERS") with DynamicFinder {
   def id = column[Long]("SUP_ID", O.PrimaryKey,O AutoInc) // This is the primary key column
   def name = column[String]("SUP_NAME")
   def street = column[String]("STREET")
@@ -58,5 +59,26 @@ object Suppliers extends Table[Supplier]("SUPPLIERS") {
    * Construct the Map[String,String] needed to fill a select options set.
    */
   def options = this.findAll.map(x => x.id -> x.name)
+  
+  def findByIdAndName(id:Long,name:String)  = {
+     val result = for (
+        entity <- Suppliers 
+        if entity.id === id && entity.name === name
+        ) yield entity
+      result
+    }
+        
+  def findByNameAndCity(name:String,city:String)  =
+    for (
+        entity <- Suppliers 
+        if entity.name === name && entity.city === city
+        ) yield entity
+        
+  def findByIdAndNameAndCity(id:Long,name:String,city:String)  =
+    for (
+        entity <- Suppliers 
+        if entity.id===id && entity.name === name && entity.city === city
+        ) yield entity
+  
 }
 

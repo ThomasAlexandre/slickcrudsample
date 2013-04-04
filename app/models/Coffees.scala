@@ -72,12 +72,7 @@ object Coffees extends Table[Coffee]("COFFEES") with DynamicFinder {
   def findByPK(pk: Long) =
     for (c <- Coffees if c.id === pk) yield c
     
-  def findByNameAndPrice(params:HList) = {
-      println("Running real method...")
-    for (c <- Coffees 
-        if c.name === params.head) yield c
-    
-  }
+  
     
     
 }

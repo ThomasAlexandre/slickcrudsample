@@ -32,6 +32,14 @@ object SuppliersController extends Controller {
     Suppliers.options.list.map(item => (item._1.toString, item._2))
   }
 
+  def trydynamic = Action {
+    database withSession {
+      println(Suppliers.finByIdAndName(2, "Superior Coffee").list)
+      //    Coffees.findByNameAndPrice(HList("Espresso",999))
+    }
+    Home
+  }
+
   /**
    * Describe the form (used in both edit and create screens).
    */
@@ -58,7 +66,7 @@ object SuppliersController extends Controller {
    * @param orderBy Column to be sorted
    * @param filter Filter applied on entity names
    */
-  def list(page: Int, orderBy: Int, order:String, asc:Boolean=false,filter: String = "%") = Action { implicit request =>
+  def list(page: Int, orderBy: Int, order: String, asc: Boolean = false, filter: String = "%") = Action { implicit request =>
     database withSession {
       Ok(html.suppliers.list(
         Page(Suppliers.list(page, pageSize, orderBy, filter).list,
@@ -69,7 +77,7 @@ object SuppliersController extends Controller {
         filter))
     }
   }
-  
+
   /**
    * Display an existing entity.
    *
