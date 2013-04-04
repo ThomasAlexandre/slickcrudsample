@@ -17,6 +17,8 @@ import scala.slick.driver.H2Driver.simple._
 // Use the implicit threadLocalSession
 import Database.threadLocalSession
 
+import shapeless.{Iso, ::, HList, HNil}
+
 object CoffeesController extends Controller {
 
   lazy val database = Database.forDataSource(DB.getDataSource())
@@ -52,7 +54,8 @@ object CoffeesController extends Controller {
   def index = Action { Home }
   
   def trydynamic = Action {
-    Coffees.findByNameAndPrice("espresso",999)
+    //Coffees.findByNameAndPrice("Espresso"::999::HNil)
+    Coffees.findByNameAndPrice(HList("Espresso",999))
     Home
   }
 

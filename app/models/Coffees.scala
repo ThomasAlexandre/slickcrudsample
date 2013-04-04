@@ -3,6 +3,8 @@ package models
 import scala.slick.driver.H2Driver.simple._
 import scala.reflect.runtime.{ universe => ru }
 import util.DynamicFinder
+import shapeless._
+import HList._
 
 case class Coffee(
   id:Option[Long],
@@ -38,11 +40,15 @@ object Coffees extends Table[Coffee]("COFFEES") with DynamicFinder {
   
   val mirror = ru.runtimeMirror(getClass.getClassLoader)
   
-  def list(page: Int = 0, pageSize: Int = 10, orderBy: Int = 1, filter: String = "%") = {
+  val fields = { 
     val members = ru.typeOf[Coffee].members.filter(m => m.isTerm && !m.isMethod).toList
-    val fields = members.map(_.name.decoded.trim).reverse.toVector
-    println("Fields of Supplier class: " + fields)
-
+    val result = members.map(_.name.decoded.trim).reverse.toVector
+    println("Fields of Supplier class: " + result)
+    result
+  }
+  
+  def list(page: Int = 0, pageSize: Int = 10, orderBy: Int = 1, filter: String = "%") = {
+    
     val sortField: String = fields(orderBy.abs - 1)
     println("The field to sort against is: " + sortField)
 
@@ -65,6 +71,14 @@ object Coffees extends Table[Coffee]("COFFEES") with DynamicFinder {
 
   def findByPK(pk: Long) =
     for (c <- Coffees if c.id === pk) yield c
+    
+  def findByNameAndPrice(params:HList) = {
+      println("Running real method...")
+    for (c <- Coffees 
+        if c.name === params.head) yield c
+    
+  }
+    
     
 }
 

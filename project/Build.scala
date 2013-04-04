@@ -17,9 +17,11 @@ object ApplicationBuild extends Build {
     "org.apache.derby" % "derby" % "10.6.1.0",
     "org.hsqldb" % "hsqldb" % "2.0.0",
     "postgresql" % "postgresql" % "8.4-701.jdbc4",
-    "mysql" % "mysql-connector-java" % "5.1.13")
+    "mysql" % "mysql-connector-java" % "5.1.13",
+    "com.chuusai" %% "shapeless" % "1.2.4")
 
-  val main = play.Project(appName, appVersion, appDependencies).settings( // Add your own project settings here      
-  )
+  val main = play.Project(appName, appVersion, appDependencies).settings(defaultScalaSettings: _*).settings(
+    resolvers += "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/",
+    resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/")
 
 }
