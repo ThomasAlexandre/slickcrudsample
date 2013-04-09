@@ -17,6 +17,14 @@ import scala.slick.driver.H2Driver.simple._
 // Use the implicit threadLocalSession
 import Database.threadLocalSession
 
+import util.CRUD
+import scala.language.dynamics
+import shapeless._
+import models._
+import util._
+//import Record._
+import Suppliers._
+
 object SuppliersController extends Controller {
 
   lazy val database = Database.forDataSource(DB.getDataSource())
@@ -32,10 +40,16 @@ object SuppliersController extends Controller {
     Suppliers.options.list.map(item => (item._1.toString, item._2))
   }
 
-  def trydynamic = Action {
+  def notdynamic = Action {
     database withSession {
-      println(Suppliers.finByIdAndName(2, "Superior Coffee").list)
-      //    Coffees.findByNameAndPrice(HList("Espresso",999))
+      println("Not Dynamic" + Suppliers.findByNameAndCity("Superior Coffee","Groundsville").list)
+    }
+    Home
+  }
+  
+  def dynamic = Action {
+    database withSession {
+      println("Dynamic: "+ Suppliers.finByNameAndCity("Superior Coffee","Groundsville"))
     }
     Home
   }

@@ -5,7 +5,8 @@
 # Home page
 GET      /							controllers.CoffeesController.index
 
-GET		 /dynamic					controllers.SuppliersController.trydynamic
+GET		 /dynamic					controllers.SuppliersController.dynamic
+GET		 /notdynamic				controllers.SuppliersController.notdynamic
 
 # Coffees list (look at the default values for pagination parameters)
 GET      /coffees					controllers.CoffeesController.list(p:Int ?= 0, s:Int ?= 2, f ?= "%")

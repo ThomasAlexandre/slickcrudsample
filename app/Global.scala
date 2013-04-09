@@ -27,7 +27,7 @@ object Global extends GlobalSettings {
       Suppliers.insertAll(
         Supplier(Some(1), "Acme, Inc.", "99 Market Street", "Mendocino", "CA", "95199"),
         Supplier(Some(2), "Superior Coffee", "1 Party Place", "Groundsville", "CA", "95460"),
-        Supplier(Some(3), "The High Ground", "100 Coffee Lane", "Meadows", "CA", "93966"))
+        Supplier(Some(3), "The High Ground", "100 Coffee Lane", "Groundsville", "CA", "93966"))
 
       // Insert some coffees (using JDBC's batch insert feature, if supported by the DB)
       Coffees.insertAll(
