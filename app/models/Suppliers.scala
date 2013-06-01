@@ -3,7 +3,6 @@ package models
 import scala.slick.driver.H2Driver.simple._
 import scala.slick.lifted.AbstractTable
 import scala.reflect.runtime.{ universe => ru }
-import util.{ DynamicTable, CRUD }
 
 case class Supplier(
   id: Option[Long],

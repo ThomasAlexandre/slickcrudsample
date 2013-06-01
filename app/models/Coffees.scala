@@ -2,7 +2,6 @@ package models
 
 import scala.slick.driver.H2Driver.simple._
 import scala.reflect.runtime.{ universe => ru }
-import util.DynamicTable
 import shapeless._
 import HList._
 
