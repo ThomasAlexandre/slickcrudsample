@@ -2,7 +2,7 @@ package models
 
 import scala.slick.driver.H2Driver.simple._
 import scala.reflect.runtime.{ universe => ru }
-import util.DynamicFinder
+import util.DynamicTable
 import shapeless._
 import HList._
 
@@ -15,15 +15,15 @@ case class Coffee(
   total: Int)
 
 // Definition of the COFFEES table
-object Coffees extends Table[Coffee]("COFFEES") with DynamicFinder {
-  def id = column[Long]("COF_ID", O.PrimaryKey, O AutoInc) // This is the primary key column
+object Coffees extends Table[Coffee]("COFFEES") {
+  
+  def id = column[Long]("ID", O.PrimaryKey, O AutoInc) // This is the primary key column
   def name = column[String]("COF_NAME")
   def supID = column[Long]("SUP_ID")
   def price = column[Long]("PRICE")
   def sales = column[Int]("SALES")
   def total = column[Int]("TOTAL")
-  //def * = id.? ~ name ~ supID ~ price ~ sales ~ total <> (Coffee.apply _, Coffee.unapply _)
-  
+ 
   def * = id.? ~ name ~ supID ~ price ~ sales ~ total <> (Coffee.apply _, Coffee.unapply _)
   //def autoInc = id.? ~ name ~ supID ~ price ~ sales ~ total <> (Coffee, Coffee.unapply _) returning id
   
@@ -59,7 +59,7 @@ object Coffees extends Table[Coffee]("COFFEES") with DynamicFinder {
       case "price" => ru.typeOf[Coffees.type].declaration(ru.newTermName("price")).asMethod
       case "sales" => ru.typeOf[Coffees.type].declaration(ru.newTermName("sales")).asMethod
       case "total" => ru.typeOf[Coffees.type].declaration(ru.newTermName("total")).asMethod
-      case "id" => ru.typeOf[Suppliers.type].declaration(ru.newTermName("id")).asMethod
+      case "id" => ru.typeOf[Coffees.type].declaration(ru.newTermName("id")).asMethod
     }
 
     findAll().sortBy { x =>    
@@ -71,9 +71,6 @@ object Coffees extends Table[Coffee]("COFFEES") with DynamicFinder {
 
   def findByPK(pk: Long) =
     for (c <- Coffees if c.id === pk) yield c
-    
-  
-    
     
 }
 

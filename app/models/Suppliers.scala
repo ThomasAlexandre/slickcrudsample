@@ -1,8 +1,9 @@
 package models
 
 import scala.slick.driver.H2Driver.simple._
+import scala.slick.lifted.AbstractTable
 import scala.reflect.runtime.{ universe => ru }
-import util.{DynamicFinder, CRUD}
+import util.{ DynamicTable, CRUD }
 
 case class Supplier(
   id: Option[Long],
@@ -13,8 +14,9 @@ case class Supplier(
   zipCode: String)
 
 // Definition of the SUPPLIERS table
-object Suppliers extends Table[Supplier]("SUPPLIERS") with DynamicFinder {
-  def id = column[Long]("SUP_ID", O.PrimaryKey,O AutoInc) // This is the primary key column
+object Suppliers extends Table[Supplier]("SUPPLIERS") {
+  
+  def id = column[Long]("SUP_ID", O.PrimaryKey, O AutoInc) // This is the primary key column
   def name = column[String]("SUP_NAME")
   def street = column[String]("STREET")
   def city = column[String]("CITY")
@@ -27,7 +29,7 @@ object Suppliers extends Table[Supplier]("SUPPLIERS") with DynamicFinder {
 
   val mirror = ru.runtimeMirror(getClass.getClassLoader)
 
-  def list(page: Int = 0, pageSize: Int = 10, orderBy: Int = 1, order:String, asc:Boolean= false, filter: String = "%") = {
+  def list(page: Int = 0, pageSize: Int = 10, orderBy: Int = 1, order: String, asc: Boolean = false, filter: String = "%") = {
     val members = ru.typeOf[Supplier].members.filter(m => m.isTerm && !m.isMethod).toList
     val fields = members.map(_.name.decoded.trim).reverse.toVector
     println("Fields of Supplier class: " + fields)
@@ -45,7 +47,12 @@ object Suppliers extends Table[Supplier]("SUPPLIERS") with DynamicFinder {
       case "id" => ru.typeOf[Suppliers.type].declaration(ru.newTermName("id")).asMethod
     }
 
-    findAll.sortBy { x =>    
+//    findAll().sortBy { x =>
+//      val reflectedMethod = mirror.reflect(x._1).reflectMethod(methodFields)().asInstanceOf[Column[Any]]
+//      if (orderBy >= 0) reflectedMethod.asc
+//      else reflectedMethod.desc
+//    }.drop(page * pageSize).take(pageSize)
+    findAll().sortBy { x =>    
       val reflectedMethod = mirror.reflect(x).reflectMethod(methodFields)().asInstanceOf[Column[Any]]
       if (orderBy >= 0) reflectedMethod.asc
       else reflectedMethod.desc
@@ -53,32 +60,31 @@ object Suppliers extends Table[Supplier]("SUPPLIERS") with DynamicFinder {
   }
 
   def findByPK(pk: Long) =
-    for (entity <- Suppliers if entity.id === pk) yield entity 
+    for (entity <- Suppliers if entity.id === pk) yield entity
 
   /**
    * Construct the Map[String,String] needed to fill a select options set.
    */
-  def options = this.findAll.map(x => x.id -> x.name)
-  
-  def findByIdAndName(id:Long,name:String)  = {
-     val result = for (
-        entity <- Suppliers 
-        if entity.id === id && entity.name === name
-        ) yield entity
-      result
-    }
-        
-  def findByNameAndCity(name:String,city:String)  =
+  def options = findAll.map(x => x.id -> x.name)
+
+  def findByIdAndName(id: Long, name: String) = {
+    val result = for (
+      entity <- Suppliers if entity.id === id && entity.name === name
+    ) yield entity
+    result
+  }
+
+  def findByNameAndCity(name: String, city: String) =
     for (
-        entity <- Suppliers 
-        if entity.name === name && entity.city === city
-        ) yield entity
-        
-  def findByIdAndNameAndCity(id:Long,name:String,city:String)  =
+      entity <- Suppliers if entity.name === name && entity.city === city
+    ) yield entity
+    
+  val byName = createFinderBy(_.name)  
+
+  def findByIdAndNameAndCity(id: Long, name: String, city: String) =
     for (
-        entity <- Suppliers 
-        if entity.id===id && entity.name === name && entity.city === city
-        ) yield entity
-  
+      entity <- Suppliers if entity.id === id && entity.name === name && entity.city === city
+    ) yield entity
+
 }
 

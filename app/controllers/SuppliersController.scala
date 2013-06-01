@@ -42,17 +42,11 @@ object SuppliersController extends Controller {
 
   def notdynamic = Action {
     database withSession {
-      println("Not Dynamic" + Suppliers.findByNameAndCity("Superior Coffee","Groundsville").list)
+      println("Not Dynamic " + Suppliers.findByNameAndCity("Superior Coffee", "Groundsville").list)
     }
     Home
   }
-  
-  def dynamic = Action {
-    database withSession {
-      println("Dynamic: "+ Suppliers.finByNameAndCity("Superior Coffee","Groundsville"))
-    }
-    Home
-  }
+
 
   /**
    * Describe the form (used in both edit and create screens).
@@ -97,7 +91,7 @@ object SuppliersController extends Controller {
    *
    * @param id Id of the entity to show
    */
-  def show(pk: Long) = Action {
+  def show[U](pk: Long) = Action {
     database withSession {
       Suppliers.findByPK(pk).list.headOption match {
         case Some(e) => Ok(html.suppliers.show(e))

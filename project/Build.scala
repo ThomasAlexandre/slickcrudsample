@@ -1,6 +1,7 @@
 import sbt._
 import Keys._
 import play.Project._
+import com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys
 
 object ApplicationBuild extends Build {
 
@@ -22,6 +23,7 @@ object ApplicationBuild extends Build {
 
   val main = play.Project(appName, appVersion, appDependencies).settings(defaultScalaSettings: _*).settings(
     resolvers += "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/",
-    resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/")
+    resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
+    EclipseKeys.withSource := true)
 
 }
