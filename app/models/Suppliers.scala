@@ -46,11 +46,6 @@ object Suppliers extends Table[Supplier]("SUPPLIERS") {
       case "id" => ru.typeOf[Suppliers.type].declaration(ru.newTermName("id")).asMethod
     }
 
-//    findAll().sortBy { x =>
-//      val reflectedMethod = mirror.reflect(x._1).reflectMethod(methodFields)().asInstanceOf[Column[Any]]
-//      if (orderBy >= 0) reflectedMethod.asc
-//      else reflectedMethod.desc
-//    }.drop(page * pageSize).take(pageSize)
     findAll().sortBy { x =>    
       val reflectedMethod = mirror.reflect(x).reflectMethod(methodFields)().asInstanceOf[Column[Any]]
       if (orderBy >= 0) reflectedMethod.asc
