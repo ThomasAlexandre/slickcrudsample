@@ -1,5 +1,6 @@
 package models
 
+import scala.slick.lifted.ForeignKeyAction
 import scala.slick.driver.H2Driver.simple._
 import scala.reflect.runtime.{ universe => ru }
 import shapeless._
@@ -27,7 +28,7 @@ object Coffees extends Table[Coffee]("COFFEES") {
   //def autoInc = id.? ~ name ~ supID ~ price ~ sales ~ total <> (Coffee, Coffee.unapply _) returning id
   
   // A reified foreign key relation that can be navigated to create a join
-  def supplier = foreignKey("SUP_FK", supID, Suppliers)(_.id)
+  def supplier = foreignKey("SUP_FK", supID, Suppliers)(_.id, onDelete = ForeignKeyAction.Cascade)
 
   def findAll(filter: String = "%") = {
     for {
